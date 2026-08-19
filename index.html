@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>¡Feliz Cumpleaños, Óscar!</title>
+<style>
+  :root {
+    --pink: #ff4d8d;
+    --purple: #7b2ff7;
+    --gold: #ffd166;
+    --bg1: #2b1055;
+    --bg2: #7597de;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 100%;
+    min-height: 100%;
+    overflow-x: hidden;
+  }
+
+  body {
+    font-family: "Segoe UI", "Trebuchet MS", system-ui, sans-serif;
+    background: linear-gradient(135deg, var(--bg1), var(--bg2));
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    padding: clamp(1rem, 4vw, 3rem);
+    text-align: center;
+    position: relative;
+  }
+
+  #confetti {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  .content {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 720px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(1rem, 4vw, 2rem);
+  }
+
+  h1 {
+    font-size: clamp(2rem, 9vw, 4.2rem);
+    font-weight: 900;
+    line-height: 1.05;
+    background: linear-gradient(90deg, var(--gold), var(--pink), var(--purple), var(--gold));
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shine 6s linear infinite;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.25);
+  }
+
+  @keyframes shine {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 300% 50%; }
+  }
+
+  .subtitle {
+    font-size: clamp(1rem, 4vw, 1.6rem);
+    font-weight: 600;
+    color: var(--gold);
+    letter-spacing: 1px;
+  }
+
+  .message {
+    font-size: clamp(0.95rem, 3.6vw, 1.25rem);
+    line-height: 1.6;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 18px;
+    padding: clamp(1rem, 4vw, 1.8rem);
+    backdrop-filter: blur(6px);
+    max-width: 100%;
+  }
+
+  .message .big {
+    font-size: 1.25em;
+    color: var(--gold);
+    font-weight: 700;
+  }
+
+  /* Carrusel */
+  .carousel {
+    position: relative;
+    width: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 18px 50px rgba(0,0,0,0.45);
+    background: rgba(0,0,0,0.25);
+    aspect-ratio: 4 / 3;
+  }
+
+  .slides {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .slide.active { opacity: 1; }
+
+  .slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  .nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.4);
+    color: #fff;
+    border: none;
+    width: clamp(38px, 11vw, 52px);
+    height: clamp(38px, 11vw, 52px);
+    border-radius: 50%;
+    font-size: clamp(1.2rem, 5vw, 1.8rem);
+    cursor: pointer;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, transform 0.1s;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .nav-btn:hover { background: rgba(0,0,0,0.65); }
+  .nav-btn:active { transform: translateY(-50%) scale(0.9); }
+  .prev { left: 10px; }
+  .next { right: 10px; }
+
+  .counter {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.5);
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    z-index: 20;
+  }
+
+  /* Miniaturas */
+  .thumbs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .thumb {
+    width: clamp(48px, 16vw, 80px);
+    height: clamp(48px, 16vw, 80px);
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border-color 0.2s, transform 0.1s;
+    opacity: 0.6;
+  }
+
+  .thumb.active { border-color: var(--gold); opacity: 1; }
+  .thumb:active { transform: scale(0.92); }
+  .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .signature {
+    font-size: clamp(0.9rem, 3.4vw, 1.1rem);
+    color: rgba(255,255,255,0.85);
+    font-style: italic;
+    margin-top: 0.5rem;
+  }
+
+  .hint {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.6);
+    margin-top: -0.5rem;
+  }
+</style>
+</head>
+<body>
+<canvas id="confetti"></canvas>
+
+<div class="content">
+  <h1>¡Feliz Cumpleaños,<br>Óscar! 🎉</h1>
+  <div class="subtitle">Un viaje más alrededor del sol ✨</div>
+
+  <p class="message">
+    <span class="big">Óscar,</span> Muy feliz cumple, deseo muchos años mas de vida. Lo quiero mucho <br><br>
+    Que este nuevo cumpleaños te traiga tantas sonrisas
+    y experiencias. <br><br>
+    Sigue siendo exactamente quien eres.
+  </p>
+
+  <div class="carousel" id="carousel">
+    <div class="slides" id="slides"></div>
+    <button class="nav-btn prev" id="prev" aria-label="Anterior">‹</button>
+    <button class="nav-btn next" id="next" aria-label="Siguiente">›</button>
+    <div class="counter" id="counter">1 / 6</div>
+  </div>
+
+  <div class="thumbs" id="thumbs"></div>
+ 
+
+  <div class="signature">Con cariño 💛</div>
+</div>
+
+<script>
+  const photos = [
+    "Oscar1.jpeg", "Oscar2.jpeg", "Oscar3.jpeg",
+    "Oscar4.jpeg", "Oscar5.jpeg", "Oscar6.jpeg"
+  ];
+
+  const slidesEl = document.getElementById("slides");
+  const thumbsEl = document.getElementById("thumbs");
+  const counterEl = document.getElementById("counter");
+  let current = 0;
+  let timer = null;
+  const INTERVAL = 3500;
+
+  photos.forEach((src, i) => {
+    const slide = document.createElement("div");
+    slide.className = "slide" + (i === 0 ? " active" : "");
+    const img = document.createElement("img");
+    img.src = src;
+    img.alt = "Foto " + (i + 1) + " de Óscar";
+    img.loading = "lazy";
+    slide.appendChild(img);
+    slidesEl.appendChild(slide);
+
+    const thumb = document.createElement("div");
+    thumb.className = "thumb" + (i === 0 ? " active" : "");
+    const timg = document.createElement("img");
+    timg.src = src;
+    timg.alt = "Miniatura " + (i + 1);
+    timg.loading = "lazy";
+    thumb.appendChild(timg);
+    thumb.addEventListener("click", () => goTo(i));
+    thumbsEl.appendChild(thumb);
+  });
+
+  const slideNodes = document.querySelectorAll(".slide");
+  const thumbNodes = document.querySelectorAll(".thumb");
+
+  function goTo(index) {
+    slideNodes[current].classList.remove("active");
+    thumbNodes[current].classList.remove("active");
+    current = (index + photos.length) % photos.length;
+    slideNodes[current].classList.add("active");
+    thumbNodes[current].classList.add("active");
+    counterEl.textContent = (current + 1) + " / " + photos.length;
+    restart();
+  }
+
+  function next() { goTo(current + 1); }
+  function prev() { goTo(current - 1); }
+
+  function start() {
+    timer = setInterval(next, INTERVAL);
+  }
+  function stop() {
+    clearInterval(timer);
+  }
+  function restart() {
+    stop();
+    start();
+  }
+
+  document.getElementById("next").addEventListener("click", next);
+  document.getElementById("prev").addEventListener("click", prev);
+
+  const carousel = document.getElementById("carousel");
+  carousel.addEventListener("mouseenter", stop);
+  carousel.addEventListener("mouseleave", start);
+
+  // Swipe táctil
+  let startX = 0;
+  carousel.addEventListener("touchstart", (e) => { startX = e.touches[0].clientX; stop(); }, { passive: true });
+  carousel.addEventListener("touchend", (e) => {
+    const endX = e.changedTouches[0].clientX;
+    const diff = startX - endX;
+    if (Math.abs(diff) > 40) { diff > 0 ? next() : prev(); }
+    else { start(); }
+  });
+
+  start();
+
+  // Confeti
+  const canvas = document.getElementById("confetti");
+  const ctx = canvas.getContext("2d");
+  let pieces = [];
+  const colors = ["#ffd166", "#ff4d8d", "#7b2ff7", "#06d6a0", "#4cc9f0", "#fff"];
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener("resize", resize);
+
+  function makePiece() {
+    return {
+      x: Math.random() * canvas.width,
+      y: -20,
+      w: 6 + Math.random() * 8,
+      h: 8 + Math.random() * 10,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      speed: 1.5 + Math.random() * 3,
+      drift: -1 + Math.random() * 2,
+      rot: Math.random() * Math.PI,
+      rotSpeed: -0.1 + Math.random() * 0.2
+    };
+  }
+
+  for (let i = 0; i < 120; i++) {
+    const p = makePiece();
+    p.y = Math.random() * canvas.height;
+    pieces.push(p);
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pieces.forEach(p => {
+      p.y += p.speed;
+      p.x += p.drift;
+      p.rot += p.rotSpeed;
+      if (p.y > canvas.height + 20) {
+        Object.assign(p, makePiece());
+        p.y = -20;
+      }
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.restore();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+</script>
+</body>
+</html>
